@@ -100,29 +100,38 @@
 
             // calculate the values based on the formulas
             // round everything to the nearest int, except BG00801
-            const bg00801 = built * 0.000052;
-            const caps = Math.round(built * 1.021);
-            const fitments = Math.round(built * 1.029);
-            const bottles = Math.round(built * 1.01); 
+            // format the numbers with commas
+            const bg00801 = built * 0.000052 * -1;
+            const caps = Math.round(built * 1.021) * -1;
+            const fitments = Math.round(built * 1.029) * -1;
+            const bottles = Math.round(built * 1.01) * -1; 
+            
+            const formattedFitments = fitments.toLocaleString();
+            const formattedCaps = caps.toLocaleString();
+            const formattedBG00801 = bg00801.toLocaleString(undefined, { 
+                minimumFractionDigits: 4, 
+                maximumFractionDigits: 4 
+            });
+        const formattedBottles = bottles.toLocaleString();
 
             // display the results
             const outputContainer = document.getElementById('output-container');
             outputContainer.innerHTML = `
                 <div class="output-row">
                     <strong>Fitments:</strong>
-                    <span class="value">-${fitments}</span>
+                    <span class="value">${formattedFitments}</span>
                 </div>
                 <div class="output-row">
                     <strong>Caps:</strong>
-                    <span class="value">-${caps}</span>
+                    <span class="value">${formattedCaps}</span>
                 </div>
                 <div class="output-row">
                     <strong>BG00801:</strong>
-                    <span class="value">-${bg00801.toFixed(4)}</span>
+                    <span class="value">${formattedBG00801}</span>
                 </div>
                 <div class="output-row">
                     <strong>Bottles:</strong>
-                    <span class="value">-${bottles}</span>
+                    <span class="value">${formattedBottles}</span>
                 </div>
             `;
         }
