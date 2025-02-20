@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Form Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .output-container {
+            margin-top: 20px;
+        }
+
+        .output-container p {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Web Form Calculator</h2>
+        <label for="quantity-built">Quantity Built:</label>
+        <input type="number" id="quantity-built" placeholder="Enter the quantity built">
+
+        <button onclick="calculateValues()">Calculate</button>
+
+        <div class="output-container" id="output-container">
+            <!-- Results will appear here -->
+        </div>
+    </div>
+
+    <script>
+        function calculateValues() {
+            // Get the quantity built input value
+            const built = parseFloat(document.getElementById('quantity-built').value);
+
+            if (isNaN(built) || built <= 0) {
+                alert('Please enter a valid number greater than 0.');
+                return;
+            }
+
+            // Calculate the values based on the formulas
+            const bg00801 = built * 0.000052;
+            const caps = built * 1.021;
+            const fitments = built * 1.029;
+            const bottles = built * 1.01;
+
+            // Display the results
+            const outputContainer = document.getElementById('output-container');
+            outputContainer.innerHTML = `
+                <p><strong>BG00801:</strong> ${bg00801.toFixed(4)}</p>
+                <p><strong>Caps:</strong> ${caps.toFixed(2)}</p>
+                <p><strong>Fitments:</strong> ${fitments.toFixed(2)}</p>
+                <p><strong>Bottles:</strong> ${bottles.toFixed(2)}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
