@@ -77,14 +77,14 @@
 <body>
 
     <div class="form-container">
-        <h2>Components Spent Calculator</h2>
+        <h2>Components Spent</h2>
         <label for="quantity-built">Quantity Built:</label>
         <input type="number" id="quantity-built" placeholder="Enter the quantity built">
 
         <button onclick="calculateValues()">Calculate</button>
 
         <div class="output-container" id="output-container">
-            <!-- Results will appear here -->
+            <!-- results will appear here -->
         </div>
     </div>
 
@@ -98,13 +98,14 @@
                 return;
             }
 
-            // Calculate the values based on the formulas
-            const bg00801 = built * 0.000052;  // BG00801 is not rounded
-            const caps = Math.round(built * 1.021);  // Round Caps to nearest integer
-            const fitments = Math.round(built * 1.029);  // Round Fitments to nearest integer
-            const bottles = Math.round(built * 1.01);  // Round Bottles to nearest integer
+            // calculate the values based on the formulas
+            // round everything to the nearest int, except BG00801
+            const bg00801 = built * 0.000052;
+            const caps = Math.round(built * 1.021);
+            const fitments = Math.round(built * 1.029);
+            const bottles = Math.round(built * 1.01); 
 
-            // Display the results
+            // display the results
             const outputContainer = document.getElementById('output-container');
             outputContainer.innerHTML = `
                 <div class="output-row">
@@ -126,7 +127,7 @@
             `;
         }
         document.getElementById('quantity-built').addEventListener('keypress', function(event) {
-        // Check if the Enter key (keyCode 13) was pressed
+        // check if the Enter key (keyCode 13) was pressed
         if (event.key === 'Enter') {
             calculateValues();
         }
