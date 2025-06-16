@@ -68,7 +68,6 @@
     </style>
 </head>
 <body>
-
     <div class="form-container">
         <h2>Components Spent</h2>
         
@@ -106,8 +105,8 @@
 
             // Component Calculations
             const bg00801 = built * 0.000052 * -1;
-            const caps = Math.round(built * 1.027) * -1;
-            const fitments = Math.round(built * 1.029) * -1;
+            const caps = Math.round(built * 1.023) * -1;
+            const fitments = Math.round(built * 1.027) * -1;
             const bottles = Math.round(built * 1.01) * -1;
 
             // Formatting results
@@ -141,13 +140,11 @@
             const ggFront = Math.round((labelWeight / 2.68) * 10000);
             const ggBack = Math.round((labelWeight / 2.65) * 10000);
             const wat5ozLofton = Math.round((labelWeight / 4.3) * 3000);
-            const wat5ozEdwards = Math.round((labelWeight / 3.8) * 2600);
 
             // Formatting results
             const formattedGGFront = ggFront.toLocaleString();
             const formattedGGBack = ggBack.toLocaleString();
             const formattedWAT5ozLofton = wat5ozLofton.toLocaleString();
-            const formattedWAT5ozEdwards = wat5ozEdwards.toLocaleString();
 
             // Display results
             document.getElementById('labels-output').innerHTML = `
@@ -155,8 +152,7 @@
                 <div class="output-row"><strong>GG 4oz Front:</strong><span class="value">${formattedGGFront}</span></div>
                 <div class="output-row"><strong>GG 4oz Back:</strong><span class="value">${formattedGGBack}</span></div>
                 <div class="output-row"><strong>WAT 5oz (Lofton):</strong><span class="value">${formattedWAT5ozLofton}</span></div>
-                <div class="output-row"><strong>WAT 5oz (Edwards):</strong><span class="value">${formattedWAT5ozEdwards}</span></div>
-            `;
+                `;
         }
 
         // Enable Enter key calculation for Quantity Built
