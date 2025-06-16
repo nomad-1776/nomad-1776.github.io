@@ -140,17 +140,20 @@
             const ggFront = Math.round((labelWeight / 2.68) * 10000);
             const ggBack = Math.round((labelWeight / 2.65) * 10000);
             const wat5ozLofton = Math.round((labelWeight / 4.3) * 3000);
+            const ewLabels = Math.round((labelWeight / 0.43) * 1500);
 
             // Formatting results
             const formattedGGFront = ggFront.toLocaleString();
             const formattedGGBack = ggBack.toLocaleString();
             const formattedWAT5ozLofton = wat5ozLofton.toLocaleString();
+            const formattedEwLabels = ewLabels.toLocaleString();
 
             // Display results
             document.getElementById('labels-output').innerHTML = `
                 <h3>Label Weight Results (kg)</h3>
                 <div class="output-row"><strong>GG 4oz Front:</strong><span class="value">${formattedGGFront}</span></div>
                 <div class="output-row"><strong>GG 4oz Back:</strong><span class="value">${formattedGGBack}</span></div>
+                <div class="output-row"><strong>EW:</strong><span class="value">${formattedEWLabels}</span></div>
                 <div class="output-row"><strong>WAT 5oz:</strong><span class="value">${formattedWAT5ozLofton}</span></div>
                 `;
         }
