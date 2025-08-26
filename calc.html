@@ -105,11 +105,14 @@
 
             // Component Calculations
             const bg00801 = built * 0.000052 * -1;
-            const caps = Math.round(built * 1.023) * -1;
-            const fitments = Math.round(built * 1.027) * -1;
-            const bottles = Math.round(built * 1.01) * -1;
+            const caps = Math.round(built * 1.021) * -1;
+            const fitments = Math.round(built * 1.029) * -1;
+            const bottles = Math.round(built * 1.01) * -1; // 4oz/5oz watkins glass
+            const bottle_fx21500 = Math.round(built * 1.015) * -1;
+            const bottle_fx21503 = Math.round(built * 1.026) * -1;
+            const bottle_fx21800 = Math.round(built * 1.01) * -1;
 
-            // Formatting results
+            // formatting results
             const formattedFitments = fitments.toLocaleString();
             const formattedCaps = caps.toLocaleString();
             const formattedBG00801 = bg00801.toLocaleString(undefined, { 
@@ -118,6 +121,11 @@
             });
             const formattedBottles = bottles.toLocaleString();
 
+            // DS8 bottles
+            const formattedbottle_fx21500 = bottle_fx21500.toLocaleString();
+            const formattedbottle_fx21503 = bottle_fx21503.toLocaleString();
+            const formattedbottle_fx21800 = bottle_fx21800.toLocaleString();
+
             // Display results
             document.getElementById('components-output').innerHTML = `
                 <h3>Component Results</h3>
@@ -125,6 +133,9 @@
                 <div class="output-row"><strong>Caps:</strong><span class="value">${formattedCaps}</span></div>
                 <div class="output-row"><strong>BG00801:</strong><span class="value">${formattedBG00801}</span></div>
                 <div class="output-row"><strong>Bottles:</strong><span class="value">${formattedBottles}</span></div>
+                <div class="output-row"><strong>Bottles:</strong><span class="value">${formattedbottle_fx21500}</span></div>
+                <div class="output-row"><strong>Bottles:</strong><span class="value">${formattedbottle_fx21503}</span></div>
+                <div class="output-row"><strong>Bottles:</strong><span class="value">${formattedbottle_fx21800}</span></div>
             `;
         }
 
