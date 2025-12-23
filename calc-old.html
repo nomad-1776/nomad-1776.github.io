@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components & Label Weight Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .form-container input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .output-container {
+            margin-top: 20px;
+        }
+
+        .output-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .output-row strong {
+            flex: 1;
+            text-align: left;
+        }
+
+        .output-row .value {
+            flex: 1;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Components Spent</h2>
+        
+        <label for="quantity-built">Quantity Built:</label>
+        <input type="number" id="quantity-built" placeholder="Enter the quantity built">
+
+        <button onclick="calculateComponents()">Calculate Components</button>
+
+        <div class="output-container" id="components-output">
+            <!-- Components results will appear here -->
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Label Weight Calculations (kg)</h2>
+
+        <label for="label-weight">Label Weight:</label>
+        <input type="number" id="label-weight" step="0.01" placeholder="Enter the label weight">
+
+        <button onclick="calculateLabels()">Calculate Labels</button>
+
+        <div class="output-container" id="labels-output">
+            <!-- Label weight results will appear here -->
+        </div>
+    </div>
+
+    <script>
+        function calculateComponents() {
+            const built = parseFloat(document.getElementById('quantity-built').value);
+
+            if (isNaN(built) || built <= 0) {
+                alert('Please enter a valid Quantity Built greater than 0.');
+                return;
+            }
+
+            // Component Calculations
+            const bg00801 = built * 0.00006 * -1;
+            const caps = Math.round(built * 1.015) * -1;
+            const fitments = Math.round(built * 1.02) * -1;
+            const bottles = Math.round(built * 1.01) * -1; // 4oz/5oz watkins glass
+            const bottle_fx21500 = Math.round(built * 1.015) * -1;
+            const bottle_fx21800 = Math.round(built * 1.01) * -1;
+            const cap_fx21503 = Math.round(built * 1.026) * -1;
+
+            // formatting results
+            const formattedFitments = fitments.toLocaleString();
+            const formattedCaps = caps.toLocaleString();
+            const formattedBG00801 = bg00801.toLocaleString(undefined, { 
+                minimumFractionDigits: 4,
+                maximumFractionDigits: 4
+            });
+            const formattedBottles = bottles.toLocaleString();
+
+            // DS8
+            const formattedbottle_fx21500 = bottle_fx21500.toLocaleString();
+            const formattedbottle_fx21800 = bottle_fx21800.toLocaleString();
+            const formattedCap_fx21503 = cap_fx21503.toLocaleString();
+
+
+            // Display results
+            document.getElementById('components-output').innerHTML = `
+                <h3>Component Results</h3>
+                <div class="output-row"><strong>BG00801/BG00802: </strong><span class="value">${formattedBG00801}</span></div>
+                <div class="output-row"><strong>Fitments:</strong><span class="value">${formattedFitments}</span></div>
+                <div class="output-row"><strong>Caps     (DS2/3/7):</strong><span class="value">${formattedCaps}</span></div>
+                <div class="output-row"><strong>Bottles  (DS2/3/7):</strong><span class="value">${formattedBottles}</span></div>
+                <div class="output-row"><strong>Bottles (FX21500):</strong><span class="value">${formattedbottle_fx21500}</span></div>
+                <div class="output-row"><strong>Bottles (FX21800):</strong><span class="value">${formattedbottle_fx21800}</span></div>
+                <div class="output-row"><strong>Caps    (FX21503):</strong><span class="value">${formattedCap_fx21503}</span></div>
+            `;
+        }
+
+        function calculateLabels() {
+            const labelWeight = parseFloat(document.getElementById('label-weight').value);
+
+            if (isNaN(labelWeight) || labelWeight <= 0) {
+                alert('Please enter a valid Label Weight greater than 0.');
+                return;
+            }
+
+            // Label Weight Calculations (rounded to whole numbers)
+            const ggFront = Math.round((labelWeight / 2.72) * 10000);
+            const ggBack = Math.round((labelWeight / 2.70) * 10000);
+            const wat5ozLofton = Math.round((labelWeight / 4.3) * 3000);
+            const ewLabels = Math.round((labelWeight / 0.43) * 1500);
+
+            // Formatting results
+            const formattedGGFront = ggFront.toLocaleString();
+            const formattedGGBack = ggBack.toLocaleString();
+            const formattedWAT5ozLofton = wat5ozLofton.toLocaleString();
+            const formattedEWLabels = ewLabels.toLocaleString();
+
+            // Display results
+            document.getElementById('labels-output').innerHTML = `
+                <h3>Label Weight Results (kg)</h3>
+                <div class="output-row"><strong>GG 4oz Front:</strong><span class="value">${formattedGGFront}</span></div>
+                <div class="output-row"><strong>GG 4oz Back:</strong><span class="value">${formattedGGBack}</span></div>
+                <div class="output-row"><strong>EW:</strong><span class="value">${formattedEWLabels}</span></div>
+                <div class="output-row"><strong>WAT 5oz:</strong><span class="value">${formattedWAT5ozLofton}</span></div>
+                `;
+        }
+
+        // Enable Enter key calculation for Quantity Built
+        document.getElementById('quantity-built').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateComponents();
+            }
+        });
+
+        // Enable Enter key calculation for Label Weight
+        document.getElementById('label-weight').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateLabels();
+            }
+        });
+    </script>
+
+</body>
+</html>
