@@ -226,33 +226,39 @@
             }
         }
 
-        /* Skid sizes UI */
-        .form-container #skid-toggle-btn {
+        /* Skid sizes UI & Component line UI toggle buttons */
+        .form-container #skid-toggle-btn,
+        .form-container #comp-line-toggle-btn {
             border-radius: 8px;
             margin-top: 8px;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="false"] {
+        .form-container #skid-toggle-btn[aria-expanded="false"],
+        .form-container #comp-line-toggle-btn[aria-expanded="false"] {
             background-color: #4CAF50;
             color: #fff;
             border: none;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="false"]:hover {
+        .form-container #skid-toggle-btn[aria-expanded="false"]:hover,
+        .form-container #comp-line-toggle-btn[aria-expanded="false"]:hover {
             background-color: #45a049;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="true"] {
+        .form-container #skid-toggle-btn[aria-expanded="true"],
+        .form-container #comp-line-toggle-btn[aria-expanded="true"] {
             background: #fff;
             color: #111;
             border: 1px solid #bbb;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="true"]:hover {
+        .form-container #skid-toggle-btn[aria-expanded="true"]:hover,
+        .form-container #comp-line-toggle-btn[aria-expanded="true"]:hover {
             background: #f1f1f1;
         }
 
-        .form-container #skid-toggle-btn:focus {
+        .form-container #skid-toggle-btn:focus,
+        .form-container #comp-line-toggle-btn:focus {
             outline: 2px solid #4CAF50;
             outline-offset: 2px;
         }
@@ -263,6 +269,12 @@
             border: 1px solid #d7d7d7;
             border-radius: 10px;
             background: #fff;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .skid-ui * {
+            box-sizing: border-box;
         }
 
         .skid-title {
@@ -356,7 +368,7 @@
 
         .preset-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
 
@@ -421,9 +433,15 @@
         <label for="quantity-built">Quantity Built:</label>
         <input type="number" id="quantity-built" placeholder="Enter the quantity built">
 
-        <button onclick="calculateComponents()">Calculate Components</button>
+        <div class="skid-ui" id="comp-line-ui">
+            <div class="tabbar" role="tablist" aria-label="Departments">
+                <button type="button" class="tab-btn active" id="comp-tab-dry" role="tab" aria-selected="true" data-tab="dry">Dry Spice</button>
+                <button type="button" class="tab-btn" id="comp-tab-extracts" role="tab" aria-selected="false" data-tab="extracts">Extracts</button>
+            </div>
 
-        <div class="output-container" id="components-output"></div>
+            <div class="linebar" id="comp-linebar" aria-label="Lines"></div>
+            <div class="preset-grid" id="comp-preset-grid" aria-label="Component presets"></div>
+        </div>
     </div>
 
     <div class="form-container standalone">
@@ -529,43 +547,145 @@
     });
 
     // ===== CALCULATOR FUNCTIONS =====
-    function calculateComponents() {
-        const built = parseFloat(document.getElementById('quantity-built').value);
 
-        if (isNaN(built) || built <= 0) {
-            alert('Please enter a valid Quantity Built greater than 0.');
-            return;
+    // Component line state
+    const compLineState = {
+        activeTab: "dry",
+        activeLine: { dry: "DS2", extracts: "Express" }
+    };
+
+    const COMP_LINE_DATA = {
+        dry: {
+            label: "Dry Spice",
+            lines: ["DS2", "DS3", "DS7", "DS8"]
+        },
+        extracts: {
+            label: "Extracts",
+            lines: ["Express"]
         }
+    };
 
-        const bg00801 = built * 0.00006 * -1;
-        const caps = Math.round(built * 1.015) * -1;
-        const fitments = Math.round(built * 1.02) * -1;
-        const bottles = Math.round(built * 1.01) * -1;
-        const bottle_fx21500 = Math.round(built * 1.015) * -1;
-        const bottle_fx21800 = Math.round(built * 1.01) * -1;
-        const cap_fx21503 = Math.round(built * 1.026) * -1;
+    // Component definitions per line
+    const COMP_ITEMS = {
+        "DS2": [
+            { name: "BG00801", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "BG00802", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "Fitments", calc: (qty) => Math.round(qty * 1.02) * -1 },
+            { name: "Caps", calc: (qty) => Math.round(qty * 1.015) * -1 },
+            { name: "Bottles", calc: (qty) => Math.round(qty * 1.01) * -1 }
+        ],
+        "DS3": [
+            { name: "BG00801", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "BG00802", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "Fitments", calc: (qty) => Math.round(qty * 1.02) * -1 },
+            { name: "Caps", calc: (qty) => Math.round(qty * 1.015) * -1 },
+            { name: "Bottles", calc: (qty) => Math.round(qty * 1.01) * -1 }
+        ],
+        "DS7": [
+            { name: "BG00801", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "BG00802", calc: (qty) => qty * 0.00006 * -1, decimals: 4 },
+            { name: "Fitments", calc: (qty) => Math.round(qty * 1.02) * -1 },
+            { name: "Caps", calc: (qty) => Math.round(qty * 1.015) * -1 },
+            { name: "Bottles", calc: (qty) => Math.round(qty * 1.01) * -1 }
+        ],
+        "DS8": [
+            { name: "Bottles (FX21500)", calc: (qty) => Math.round(qty * 1.015) * -1 },
+            { name: "Bottles (FX21800)", calc: (qty) => Math.round(qty * 1.01) * -1 },
+            { name: "Caps (FX21503)", calc: (qty) => Math.round(qty * 1.026) * -1 }
+        ],
+        "Express": [
+            { name: "Bottles (all types)", calc: (qty) => Math.round(qty * getExpressMultiplier(qty)) * -1 }
+        ]
+    };
 
-        const formattedFitments = fitments.toLocaleString();
-        const formattedCaps = caps.toLocaleString();
-        const formattedBG00801 = bg00801.toLocaleString(undefined, {
-            minimumFractionDigits: 4,
-            maximumFractionDigits: 4
+    function getExpressMultiplier(qty) {
+        if (qty <= 50000) return 1.02;
+        if (qty <= 99999) return 1.025;
+        if (qty <= 124999) return 1.03;
+        if (qty <= 149999) return 1.035;
+        if (qty <= 174999) return 1.04;
+        if (qty <= 199999) return 1.045;
+        if (qty <= 224999) return 1.05;
+        if (qty <= 249999) return 1.055;
+        return 1.06;
+    }
+
+    function setCompActiveTab(tabKey) {
+        compLineState.activeTab = tabKey;
+
+        document.querySelectorAll("#comp-line-ui .tab-btn").forEach(b => {
+            const active = (b.dataset.tab === tabKey);
+            b.classList.toggle("active", active);
+            b.setAttribute("aria-selected", active ? "true" : "false");
         });
-        const formattedBottles = bottles.toLocaleString();
-        const formattedbottle_fx21500 = bottle_fx21500.toLocaleString();
-        const formattedbottle_fx21800 = bottle_fx21800.toLocaleString();
-        const formattedCap_fx21503 = cap_fx21503.toLocaleString();
 
-        document.getElementById('components-output').innerHTML = `
-            <h3>Component Results</h3>
-            <div class="output-row"><strong>BG00801/BG00802: </strong><span class="value">${formattedBG00801}</span></div>
-            <div class="output-row"><strong>Fitments:</strong><span class="value">${formattedFitments}</span></div>
-            <div class="output-row"><strong>Caps     (DS2/3/7):</strong><span class="value">${formattedCaps}</span></div>
-            <div class="output-row"><strong>Bottles  (DS2/3/7):</strong><span class="value">${formattedBottles}</span></div>
-            <div class="output-row"><strong>Bottles (FX21500):</strong><span class="value">${formattedbottle_fx21500}</span></div>
-            <div class="output-row"><strong>Bottles (FX21800):</strong><span class="value">${formattedbottle_fx21800}</span></div>
-            <div class="output-row"><strong>Caps    (FX21503):</strong><span class="value">${formattedCap_fx21503}</span></div>
-        `;
+        renderCompLineButtons();
+        renderCompPresetGrid();
+    }
+
+    function renderCompLineButtons() {
+        const linebar = document.getElementById("comp-linebar");
+        const lines = COMP_LINE_DATA[compLineState.activeTab].lines;
+
+        linebar.innerHTML = lines.map(line => {
+            const isActive = compLineState.activeLine[compLineState.activeTab] === line;
+            return `
+                <button
+                    type="button"
+                    class="line-btn ${isActive ? "active" : ""}"
+                    data-line="${line}"
+                    aria-pressed="${isActive ? "true" : "false"}"
+                >${line}</button>
+            `;
+        }).join("");
+
+        linebar.querySelectorAll(".line-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                compLineState.activeLine[compLineState.activeTab] = btn.dataset.line;
+                renderCompLineButtons();
+                renderCompPresetGrid();
+            });
+        });
+    }
+
+    function renderCompPresetGrid() {
+        const grid = document.getElementById("comp-preset-grid");
+        const currentLine = compLineState.activeLine[compLineState.activeTab];
+        const items = COMP_ITEMS[currentLine] || [];
+
+        const built = parseFloat(document.getElementById('quantity-built').value);
+        const hasValidQty = !isNaN(built) && built > 0;
+
+        grid.innerHTML = items.map(item => {
+            let valueDisplay = "—";
+            if (hasValidQty) {
+                const val = item.calc(built);
+                if (item.decimals) {
+                    valueDisplay = val.toLocaleString(undefined, {
+                        minimumFractionDigits: item.decimals,
+                        maximumFractionDigits: item.decimals
+                    });
+                } else {
+                    valueDisplay = val.toLocaleString();
+                }
+            }
+            return `
+                <div class="preset-btn" style="cursor: default;">
+                    <span class="preset-name">${item.name}</span>
+                    <span class="preset-qty">${valueDisplay}</span>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function initCompLineUI() {
+        document.getElementById("comp-tab-dry").addEventListener("click", () => setCompActiveTab("dry"));
+        document.getElementById("comp-tab-extracts").addEventListener("click", () => setCompActiveTab("extracts"));
+
+        // Update grid when quantity changes
+        document.getElementById("quantity-built").addEventListener("input", renderCompPresetGrid);
+
+        setCompActiveTab(compLineState.activeTab);
     }
 
     function calculateLabels() {
@@ -596,10 +716,6 @@
     }
 
     // Calculator Enter key handlers
-    document.getElementById('quantity-built').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') calculateComponents();
-    });
-
     document.getElementById('label-weight').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') calculateLabels();
     });
@@ -1356,6 +1472,9 @@
     initBlankCheckboxPersistence();
     initModeCards();
     clearPlacardInputsOnLoad();
+
+    // Initialize component line UI
+    initCompLineUI();
 
     window.addEventListener("pageshow", (e) => {
         if (e.persisted) clearPlacardInputsOnLoad();
