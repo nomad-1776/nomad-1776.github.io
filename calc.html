@@ -195,8 +195,7 @@
 
         .mode-card input {
             width: 100%;
-            margin: 0;
-            margin-top: 2px;
+            margin: 2px 0 0 0;
         }
 
         .mode-hint {
@@ -226,39 +225,33 @@
             }
         }
 
-        /* Skid sizes UI & Component line UI toggle buttons */
-        .form-container #skid-toggle-btn,
-        .form-container #comp-line-toggle-btn {
+        /* Skid sizes UI toggle button */
+        .form-container #skid-toggle-btn {
             border-radius: 8px;
             margin-top: 8px;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="false"],
-        .form-container #comp-line-toggle-btn[aria-expanded="false"] {
+        .form-container #skid-toggle-btn[aria-expanded="false"] {
             background-color: #4CAF50;
             color: #fff;
             border: none;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="false"]:hover,
-        .form-container #comp-line-toggle-btn[aria-expanded="false"]:hover {
+        .form-container #skid-toggle-btn[aria-expanded="false"]:hover {
             background-color: #45a049;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="true"],
-        .form-container #comp-line-toggle-btn[aria-expanded="true"] {
+        .form-container #skid-toggle-btn[aria-expanded="true"] {
             background: #fff;
             color: #111;
             border: 1px solid #bbb;
         }
 
-        .form-container #skid-toggle-btn[aria-expanded="true"]:hover,
-        .form-container #comp-line-toggle-btn[aria-expanded="true"]:hover {
+        .form-container #skid-toggle-btn[aria-expanded="true"]:hover {
             background: #f1f1f1;
         }
 
-        .form-container #skid-toggle-btn:focus,
-        .form-container #comp-line-toggle-btn:focus {
+        .form-container #skid-toggle-btn:focus {
             outline: 2px solid #4CAF50;
             outline-offset: 2px;
         }
@@ -471,13 +464,13 @@
         <div class="mode-wrap" id="mode-wrap">
             <div class="mode-card selected" id="mode-auto" data-mode="auto" tabindex="-1">
                 <div class="mode-label">Job Total</div>
-                <input type="number" id="placard-jobtotal" autocomplete="off" placeholder="e.g., 12500" min="1" step="1" />
+                <input type="number" id="placard-jobtotal" autocomplete="off" placeholder="e.g., 12500" min="1" step="1" aria-label="Job Total" />
                 <div class="mode-hint">Calculates full-qty placards using: floor(Job Total ÷ Qty/Pallet).</div>
             </div>
 
             <div class="mode-card" id="mode-manual" data-mode="manual" tabindex="-1">
                 <div class="mode-label">Manual Print</div>
-                <input type="number" id="placard-manualcount" autocomplete="off" placeholder="e.g., 3 placards" min="1" step="1" />
+                <input type="number" id="placard-manualcount" autocomplete="off" placeholder="e.g., 3 placards" min="1" step="1" aria-label="Manual Print Count" />
                 <div class="mode-hint">Enter number of full-qty placards to print.</div>
             </div>
         </div>
@@ -935,7 +928,7 @@
         doc.open();
         doc.write(`
         <!doctype html>
-        <html>
+        <html lang="en">
           <head>
             <meta charset="utf-8" />
             <title>Placards</title>
@@ -1169,7 +1162,7 @@
 
     // Mobile detection
     function isMobileLike() {
-        const uaDataMobile = (navigator.userAgentData && navigator.userAgentData.mobile === true);
+        const uaDataMobile = navigator?.userAgentData?.mobile === true;
         const ua = navigator.userAgent || "";
         const uaPhone = /Android.*Mobile|iPhone|iPod|IEMobile|Opera Mini|Windows Phone|webOS/i.test(ua);
 
