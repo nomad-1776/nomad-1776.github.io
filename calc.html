@@ -152,7 +152,8 @@
         }
 
         .rev {
-            margin-top: 10px;
+            max-width: 420px;
+            margin: 10px auto 0 auto;
             font-size: 12px;
             opacity: 0.75;
             text-align: right;
@@ -518,9 +519,11 @@
         </div>
 
         <div id="placard-output"></div>
-        <div class="rev" id="rev-stamp"></div>
     </div>
 </div>
+
+<!-- Revision stamp (visible on all tabs) -->
+<div class="rev" id="rev-stamp"></div>
 
 <script>
     // ===== Main Tab Switching =====
@@ -714,7 +717,7 @@
     });
 
     // ===== PLACARD FUNCTIONS =====
-    const REV = "REV: 2025-12-23 00:09";
+    const REV = "REV: 2025-12-23 00:12";
     document.getElementById("rev-stamp").textContent = REV;
 
     function normalizeUpperTrim(s) {
